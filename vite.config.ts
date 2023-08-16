@@ -72,6 +72,7 @@ async function applyClosure(js: string, chunk: any) {
         compilation_level: "ADVANCED",
         language_in: "ECMASCRIPT_2020",
         language_out: "ECMASCRIPT_2020",
+        chunk_output_type: "ES_MODULES",
     });
     return new Promise((resolve, reject) => {
         closureCompiler.run((_exitCode: string, stdOut: string, stdErr: string) => {

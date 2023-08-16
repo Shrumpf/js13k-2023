@@ -44,6 +44,22 @@ module.exports = {
         "no-non-null-assertion": [
             "off"
         ],
-        "@typescript-eslint/no-non-null-assertion": ["off"]
+        "@typescript-eslint/no-non-null-assertion": ["off"],
+        "object-curly-newline": ["error", {
+            "multiline": true
+        }],
+        "object-property-newline": ["error",
+            {
+                "allowAllPropertiesOnSameLine": false
+            }],
+        "max-len": [
+            "error",
+            {
+                "code": 120,
+                "ignoreStrings": true,
+                "ignoreComments": true
+            }
+        ],
+        "function-call-argument-newline": ["error", "consistent"],
     }
 }
