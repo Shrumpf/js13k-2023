@@ -4,8 +4,11 @@
     position: absolute;
     image-rendering: pixelated;
     cursor: none;
-    /* image-rendering: crisp-edges; */
     /* You definitely want this if you are doing pixel art */
+}
+
+#cUI {
+    cursor: default;
 }
 
 /* Get rid of any margins, set background black, use flexbox to center */
