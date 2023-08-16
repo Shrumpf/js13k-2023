@@ -5,7 +5,6 @@ import { GameObject } from "@/gameObjects/gameObject";
 import { Game } from "@/index";
 
 import map from "@/data/map.json";
-import tileset from "@/data/tileset.png";
 
 export class DebugScene extends Scene {
     game: Game;
@@ -18,7 +17,7 @@ export class DebugScene extends Scene {
     constructor(game: Game) {
         super(game, "debug");
         this.tileset = new Image();
-        this.tileset.src = tileset;
+        this.tileset.src = "/tileset.png";
 
         this.mapData = {
             tileWidth: map.tilewidth,
