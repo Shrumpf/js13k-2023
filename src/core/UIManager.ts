@@ -1,5 +1,5 @@
-import { Game } from "..";
-import { ResourceManager } from "./ResourceManager";
+import {Game} from "..";
+import {ResourceManager} from "./ResourceManager";
 
 export class UIManager {
     game: Game;

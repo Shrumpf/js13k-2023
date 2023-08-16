@@ -6,8 +6,13 @@ export class DrawManager {
 
     constructor(game: Game) {
         this.game = game;
+        const ratio = window.devicePixelRatio;
+        c2d.width = 1920 * ratio;
+        c2d.height = 1080 * ratio;
+        c2d.style.width = "1920px";
+        c2d.style.height = "1080px";
+
         this.context = c2d.getContext("2d");
-        this.context.imageSmoothingEnabled = false;
     }
 
     get canvas() {
@@ -24,7 +29,6 @@ export class DrawManager {
 
     drawText(text: string, fontSize: number, x: number, y: number, color = "white", textAlign: "center" | "left" | "right" = "center") {
         const context = this.context;
-
         context.font = `${fontSize}px Impact, sans-serif-black`;
         context.textAlign = textAlign;
         context.strokeStyle = "black";

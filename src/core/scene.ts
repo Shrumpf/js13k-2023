@@ -10,9 +10,11 @@ interface IScene {
 
 export class Scene implements IScene {
     game: Game;
+    ident: string;
 
-    constructor(game: Game) {
+    constructor(game: Game, ident: string) {
         this.game = game;
+        this.ident = ident;
     }
 
     onUpdate(_time?: number) {

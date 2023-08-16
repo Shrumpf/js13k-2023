@@ -1,7 +1,7 @@
-import { Game } from "@/index";
-import { Resource } from "@/resources/resource";
-import { Stone } from "@/resources/stone";
-import { Wood } from "@/resources/wood";
+import {Game} from "@/index";
+import {Resource} from "@/resources/resource";
+import {Stone} from "@/resources/stone";
+import {Wood} from "@/resources/wood";
 
 export class ResourceManager {
     game: Game;

@@ -1,5 +1,5 @@
-import { Game } from "@/index";
-import { GameObject } from "./gameObject";
+import {Game} from "@/index";
+import {GameObject} from "./gameObject";
 
 export type Style = {
     fillStyle?: string, strokeStyle?: string, lineWidth?: number

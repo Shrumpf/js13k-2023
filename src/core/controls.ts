@@ -8,7 +8,12 @@ class Controls {
     inputDirection: DOMPoint;
 
     keyMap: Map<string, boolean> = new Map();
-    previousState = { isUp: this.isUp, isDown: this.isDown, isConfirm: this.isConfirm, isEscape: this.isEscape };
+    previousState = {
+        isUp: this.isUp,
+        isDown: this.isDown,
+        isConfirm: this.isConfirm,
+        isEscape: this.isEscape
+    };
 
     constructor() {
         document.addEventListener("keydown", event => this.toggleKey(event, true));

@@ -1,5 +1,5 @@
-import { Styles, Path } from "@/gameObjects/path";
-import { Game } from "@/index";
+import {Styles, Path} from "@/gameObjects/path";
+import {Game} from "@/index";
 
 export interface GameObject {
     update: (delta: number) => void;

@@ -1,24 +1,18 @@
 import { Scene } from "@/core/scene";
 import { controls } from "@/core/controls";
-import { countries } from "@/data/countries";
-import { Country, GameObject } from "@/gameObjects/gameObject";
+import { GameObject } from "@/gameObjects/gameObject";
 import { Game } from "@/index";
-
-import map from "@/data/map.min.png";
 
 export class GameScene extends Scene {
     game: Game;
     entities: GameObject[] = [];
-    backgroundImage: HTMLImageElement;
 
     constructor(game: Game) {
-        super(game);
-        this.backgroundImage = new Image();
-        this.backgroundImage.src = map;
+        super(game, "game");
     }
 
     onEnter() {
-        this.entities = countries.map(c => new Country(this.game, c.d, c.styles));
+        // empty
     }
 
     onUpdate(delta: number) {
@@ -33,7 +27,7 @@ export class GameScene extends Scene {
     }
 
     drawBackground() {
-        this.game.drawManager.context.drawImage(this.backgroundImage, 0, 0, this.game.drawManager.canvasWidth, this.game.drawManager.canvasHeight);
+        // em
     }
 
     drawEntities(delta: number) {

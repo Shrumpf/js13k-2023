@@ -2,6 +2,7 @@ import { Game } from "@/index";
 import { Scene } from "./scene";
 import { MenuScene } from "@/scenes/menu.scene";
 import { GameScene } from "@/scenes/game.scene";
+import { DebugScene } from "@/scenes/debug.scene";
 
 export class SceneManager {
     private currentScene: Scene;
@@ -12,7 +13,8 @@ export class SceneManager {
         this.game = game;
         this.scenes.set("menu", new MenuScene(game));
         this.scenes.set("game", new GameScene(game));
-        this.currentScene = this.scenes.get("menu")!;
+        this.scenes.set("debug", new DebugScene(game));
+        this.currentScene = this.scenes.get("debug")!;
         this.currentScene.onEnter?.();
 
     }
