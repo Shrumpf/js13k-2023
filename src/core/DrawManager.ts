@@ -3,6 +3,8 @@ import { Game } from "@/index";
 export class DrawManager {
     game: Game;
     context: CanvasRenderingContext2D;
+    offscreenCanvas: OffscreenCanvas;
+    offscreenContext: OffscreenCanvasRenderingContext2D;
 
     constructor(game: Game) {
         this.game = game;
@@ -12,7 +14,14 @@ export class DrawManager {
         c2d.style.width = "1920px";
         c2d.style.height = "1080px";
 
-        this.context = c2d.getContext("2d");
+        this.offscreenCanvas = new OffscreenCanvas(c2d.width, c2d.height);
+        this.offscreenCanvas.width = c2d.width;
+        this.offscreenCanvas.height = c2d.height;
+        this.offscreenContext = this.offscreenCanvas.getContext("2d")!;
+
+
+
+        this.context = c2d.getContext("2d", { alpha: false });
     }
 
     get canvas() {

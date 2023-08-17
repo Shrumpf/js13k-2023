@@ -19,7 +19,6 @@ export class GameScene extends Scene {
 
         this.drawBackground();
         this.drawEntities(delta);
-        this.drawSelector();
 
         if (controls.isEscape) {
             this.game.sceneManager.setScene("menu");
@@ -35,18 +34,5 @@ export class GameScene extends Scene {
         for (let i = 0; i < entityCount; i++) {
             this.entities[i].update(delta);
         }
-    }
-
-    drawSelector() {
-        const mouse = this.game.inputManager.mouse;
-        for (let x = 0; x < 1920; x += 24) {
-            for (let y = 0; y < 1080; y += 24) {
-                if (mouse.x > x && mouse.x < x + 24 && mouse.y > y && mouse.y < y + 24) {
-                    this.game.ctx.fillStyle = "white";
-                    this.game.ctx.fillRect(x, y, 25, 25);
-                }
-            }
-        }
-
     }
 }
