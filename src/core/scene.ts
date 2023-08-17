@@ -1,5 +1,6 @@
 import { GameObject } from "@/gameObjects/gameObject";
 import { Game } from "@/index";
+import { Camera } from "./CameraManager";
 
 interface IScene {
     game: Game;
@@ -11,10 +12,13 @@ interface IScene {
 export class Scene implements IScene {
     game: Game;
     ident: string;
+    camera: Camera;
 
-    constructor(game: Game, ident: string) {
+    constructor(game: Game, ident: string, camera?: Camera) {
         this.game = game;
         this.ident = ident;
+        this.camera = camera ?? this.game.cameraManager.mainCamera;
+        this.game.cameraManager.currentCamera = this.camera;
     }
 
     onUpdate(_time?: number) {

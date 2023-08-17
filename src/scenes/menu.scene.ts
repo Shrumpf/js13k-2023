@@ -23,7 +23,7 @@ export class MenuScene extends Scene {
 
     constructor(game: Game) {
         super(game, "menu");
-        this.xCenter = this.game.drawManager.canvasWidth / 2;
+        this.xCenter = 200;
         this.menuPoints.push({
             text: "Start Game",
             fontSize: 60,
@@ -32,6 +32,21 @@ export class MenuScene extends Scene {
             color: "gray",
             click: () => {
                 this.game.sceneManager.setScene("game");
+            },
+            hover: (e, mp) => {
+                console.log(e, mp);
+                //mp!.color = "white";
+            },
+        });
+
+        this.menuPoints.push({
+            text: "Debug mode",
+            fontSize: 60,
+            x: this.xCenter,
+            y: 700,
+            color: "gray",
+            click: () => {
+                this.game.sceneManager.setScene("debug");
             },
             hover: (e, mp) => {
                 console.log(e, mp);

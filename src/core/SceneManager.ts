@@ -14,7 +14,7 @@ export class SceneManager {
         this.scenes.set("menu", new MenuScene(game));
         this.scenes.set("game", new GameScene(game));
         this.scenes.set("debug", new DebugScene(game));
-        this.currentScene = this.scenes.get("debug")!;
+        this.currentScene = this.scenes.get("menu")!;
         this.currentScene.onEnter?.();
 
     }
