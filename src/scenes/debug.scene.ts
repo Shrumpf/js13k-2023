@@ -17,7 +17,7 @@ export class DebugScene extends Scene {
     tileset: HTMLImageElement;
     mapData;
     tiles: Tile[] = [];
-    foo: ImageBitmap;
+    foo = 0;
 
 
     constructor(game: Game) {
@@ -37,53 +37,107 @@ export class DebugScene extends Scene {
     }
 
     onEnter() {
-        setTimeout(() => {
-
-            for (let layer = 0; layer < map.layers.length; layer++) {
-                for (let y = 0; y < this.mapData.height; y += 1) {
-                    for (let x = 0; x < this.mapData.width; x += 1) {
-                        const tileMapIndex = map.layers[layer].data[x + map.layers[layer].width * y] ?? 14;
-
-                        const spriteLocationOnTileSet = {
-                            x: (tileMapIndex % 10) * this.mapData.tileWidth,
-                            y: Math.floor(tileMapIndex / 10) * this.mapData.tileHeight
-                        };
-
-                        this.game.drawManager.offscreenContext.drawImage(this.tileset, spriteLocationOnTileSet.x, spriteLocationOnTileSet.y, this.mapData.tileWidth, this.mapData.tileHeight, x * this.mapData.tileWidth, y * this.mapData.tileHeight, this.mapData.tileWidth, this.mapData.tileHeight);
-                        // this.tiles.push({
-                        //     sx: spriteLocationOnTileSet.x,
-                        //     sy: spriteLocationOnTileSet.y,
-                        //     sw: this.mapData.tileWidth,
-                        //     sh: this.mapData.tileHeight,
-                        //     dx: x * this.mapData.tileWidth,
-                        //     dy: y * this.mapData.tileHeight,
-                        //     dw: this.mapData.tileWidth,
-                        //     dh: this.mapData.tileHeight
-                        // });
-                    }
-                }
-            }
-
-            // for (let index = 0; index < this.tiles.length; index++) {
-            //     const element = this.tiles[index];
-            //     this.game.drawManager.offscreenContext.drawImage(this.tileset, element.sx, element.sy, element.sw, element.sh, element.dx, element.dy, element.dw, element.dh);
-            // }
-
-            this.foo = this.game.drawManager.offscreenCanvas.transferToImageBitmap();
-
-        }, 1);
-
-
-
+        //d
     }
 
     onUpdate(delta: number) {
+        this.foo += delta;
 
 
-        if (this.foo) {
 
-            this.game.drawManager.context.drawImage(this.foo, 0, 0);
+        for (let layer = 0; layer < map.layers.length; layer++) {
+            for (let y = 0; y < this.mapData.height; y += 1) {
+                for (let x = 0; x < this.mapData.width; x += 1) {
+                    let tileMapIndex = map.layers[layer].data[x + map.layers[layer].width * y];
+                    let flipped_horizontally = false;
+                    let flipped_vertically = false;
+                    let flipped_diagonally = false;
+                    let rotated_hex120 = false;
+
+                    if (tileMapIndex === 0) {
+                        continue;
+                    }
+
+                    if (tileMapIndex === 48) {
+                        this.game.drawManager.context.fillStyle = "#c3d657";
+                        this.game.drawManager.context.fillRect(x * this.mapData.tileWidth,
+                            y * this.mapData.tileHeight,
+                            this.mapData.tileWidth,
+                            this.mapData.tileHeight);
+                        continue;
+                    }
+
+                    if (tileMapIndex === 47) {
+                        this.game.drawManager.context.fillStyle = "#4ebcb9";
+                        this.game.drawManager.context.fillRect(x * this.mapData.tileWidth,
+                            y * this.mapData.tileHeight,
+                            this.mapData.tileWidth,
+                            this.mapData.tileHeight);
+                        continue;
+                    }
+
+                    if (tileMapIndex > 48) {
+                        const FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+                        const FLIPPED_VERTICALLY_FLAG = 0x40000000;
+                        const FLIPPED_DIAGONALLY_FLAG = 0x20000000;
+                        const ROTATED_HEXAGONAL_120_FLAG = 0x10000000;
+
+                        flipped_horizontally = (tileMapIndex & FLIPPED_HORIZONTALLY_FLAG) != 0;
+                        flipped_vertically = (tileMapIndex & FLIPPED_VERTICALLY_FLAG) != 0;
+                        flipped_diagonally = (tileMapIndex & FLIPPED_DIAGONALLY_FLAG) != 0;
+                        rotated_hex120 = (tileMapIndex & ROTATED_HEXAGONAL_120_FLAG) != 0;
+
+                        tileMapIndex &= ~(FLIPPED_HORIZONTALLY_FLAG |
+                            FLIPPED_VERTICALLY_FLAG |
+                            FLIPPED_DIAGONALLY_FLAG |
+                            ROTATED_HEXAGONAL_120_FLAG);
+                    }
+
+                    const spriteLocationOnTileSet = {
+                        x: ((tileMapIndex - 1) % 6) * this.mapData.tileWidth,
+                        y: ~~((tileMapIndex - 1) / 6) * this.mapData.tileHeight
+                    };
+
+                    if (flipped_horizontally) {
+                        this.game.drawManager.context.save();
+
+                        this.game.ctx.translate(this.game.canvas.width, 0);
+                        this.game.drawManager.context.scale(-1, 1);
+
+                        const tX = this.mapData.width - x - 113;
+                        const tY = this.mapData.height - y;
+
+                        this.game.drawManager.context.drawImage(
+                            this.tileset,
+                            spriteLocationOnTileSet.x,
+                            spriteLocationOnTileSet.y,
+                            this.mapData.tileWidth,
+                            this.mapData.tileHeight,
+                            tX * this.mapData.tileWidth,
+                            y * this.mapData.tileHeight,
+                            this.mapData.tileWidth,
+                            this.mapData.tileHeight);
+                        this.game.drawManager.context.restore();
+
+                    }
+                    else {
+                        this.game.drawManager.context.drawImage(
+                            this.tileset,
+                            spriteLocationOnTileSet.x,
+                            spriteLocationOnTileSet.y,
+                            this.mapData.tileWidth,
+                            this.mapData.tileHeight,
+                            x * this.mapData.tileWidth,
+                            y * this.mapData.tileHeight,
+                            this.mapData.tileWidth,
+                            this.mapData.tileHeight);
+                    }
+                }
+            }
         }
+
+
+
         // this.game.drawManager.context.getImageData(0, 0, this.game.drawManager.canvasWidth, this.game.drawManager.canvasHeight);
         // this.game.drawManager.context.drawImage(this.game.drawManager.offscreenCanvas, 0, 0);
         if (controls.isEscape) {

@@ -4,6 +4,7 @@ import { InputManager } from "./core/InputManager";
 import { ResourceManager } from "./core/ResourceManager";
 import { DrawManager } from "./core/DrawManager";
 import { UIManager } from "./core/UIManager";
+import { roundTo } from "./utils/round";
 
 // import Stats from "stats.js";
 // const stats = new Stats();
@@ -11,10 +12,9 @@ import { UIManager } from "./core/UIManager";
 // document.body.appendChild(stats.dom);
 
 
-let cameraZoom = 5;
 const MAX_ZOOM = 10;
 const MIN_ZOOM = 1;
-const SCROLL_SENSITIVITY = 0.0005;
+const SCROLL_SENSITIVITY = 0.005;
 
 export class Game {
     previousTime = 0;
@@ -30,6 +30,7 @@ export class Game {
         x: 1920 / 2,
         y: 1080 / 2,
     };
+    cameraZoom = 1;
     isDragging = false;
     dragStart: { x: number, y: number };
     lastZoom: number;
@@ -54,7 +55,7 @@ export class Game {
             x: 0,
             y: 0
         };
-        this.lastZoom = cameraZoom;
+        this.lastZoom = this.cameraZoom;
 
         window.addEventListener("mousedown", this.onPointerDown.bind(this));
         window.addEventListener("mouseup", this.onPointerUp.bind(this));
@@ -79,12 +80,12 @@ export class Game {
 
             // console.log(this.canvas.width, this.canvas.height);
             // this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
-            this.ctx.scale(cameraZoom, cameraZoom);
+            this.ctx.scale(this.cameraZoom, this.cameraZoom);
             this.ctx.translate(
                 -this.canvas.width / 2 + this.cameraOffset.x,
                 -this.canvas.height / 2 + this.cameraOffset.y);
-            c2d.getContext("2d")!.imageSmoothingEnabled = false;
-            this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            this.ctx.imageSmoothingEnabled = false;
+            this.ctx.clearRect(0, 0, this.drawManager.canvasWidth, this.drawManager.canvasHeight);
             this.uiManager.ctx.clearRect(0, 0, this.uiManager.canvas.width, this.uiManager.canvas.height);
             // Although the game is currently set at 60fps, the state machine accepts a time passed to onUpdate
             // If you'd like to unlock the framerate, you can instead use an interval passed to onUpdate to 
@@ -110,30 +111,55 @@ export class Game {
 
     onPointerDown(e: MouseEvent) {
         this.isDragging = true;
-        this.dragStart.x = this.getEventLocation(e).x / cameraZoom - this.cameraOffset.x;
-        this.dragStart.y = this.getEventLocation(e).y / cameraZoom - this.cameraOffset.y;
+        this.dragStart.x = this.getEventLocation(e).x / this.cameraZoom - this.cameraOffset.x;
+        this.dragStart.y = this.getEventLocation(e).y / this.cameraZoom - this.cameraOffset.y;
     }
 
     onPointerUp(e: MouseEvent) {
         this.isDragging = false;
-        this.lastZoom = cameraZoom;
+        this.lastZoom = this.cameraZoom;
+
     }
 
     onPointerMove(e: MouseEvent) {
         if (this.isDragging) {
-            this.cameraOffset.x = this.getEventLocation(e).x / cameraZoom - this.dragStart.x;
-            this.cameraOffset.y = this.getEventLocation(e).y / cameraZoom - this.dragStart.y;
+            this.cameraOffset.x = ~~(this.getEventLocation(e).x / this.cameraZoom - this.dragStart.x);
+            this.cameraOffset.y = ~~(this.getEventLocation(e).y / this.cameraZoom - this.dragStart.y);
+
+            // zoom 1 2 3 4
+            // offset x 1280 1792 2005 2112
+
+            // left
+            if (this.cameraOffset.x > this.canvas.width / 2) {
+                this.cameraOffset.x = this.canvas.width / 2;
+            }
+
+            //right
+            if (this.cameraOffset.x < -this.canvas.width) {
+                this.cameraOffset.x = -this.canvas.width;
+            }
+
+            //up
+            if (this.cameraOffset.y > this.canvas.height / 2) {
+                this.cameraOffset.y = this.canvas.height / 2;
+            }
+
+            // down
+            if (this.cameraOffset.y < -(this.canvas.height)) {
+                this.cameraOffset.y = -(this.canvas.height);
+            }
         }
     }
 
     adjustZoom(zoomAmount: number) {
+
         if (!this.isDragging) {
             if (zoomAmount) {
-                cameraZoom += zoomAmount;
+                this.cameraZoom += roundTo(zoomAmount, 0);
             }
 
-            cameraZoom = Math.min(cameraZoom, MAX_ZOOM);
-            cameraZoom = Math.max(cameraZoom, MIN_ZOOM);
+            this.cameraZoom = Math.min(this.cameraZoom, MAX_ZOOM);
+            this.cameraZoom = Math.max(this.cameraZoom, MIN_ZOOM);
         }
     }
 

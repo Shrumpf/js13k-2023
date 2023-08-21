@@ -9,17 +9,13 @@ export class DrawManager {
     constructor(game: Game) {
         this.game = game;
         const ratio = window.devicePixelRatio;
-        c2d.width = 1920 * ratio;
-        c2d.height = 1080 * ratio;
-        c2d.style.width = "1920px";
-        c2d.style.height = "1080px";
+        c2d.width = 1280// * ratio;
+        c2d.height = 720// * ratio;
 
         this.offscreenCanvas = new OffscreenCanvas(c2d.width, c2d.height);
         this.offscreenCanvas.width = c2d.width;
         this.offscreenCanvas.height = c2d.height;
         this.offscreenContext = this.offscreenCanvas.getContext("2d")!;
-
-
 
         this.context = c2d.getContext("2d", { alpha: false });
     }
